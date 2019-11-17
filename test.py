@@ -2,6 +2,7 @@ from __future__ import division
 import tqdm
 import torch
 import argparse
+import numpy as np
 from torch.utils.data import DataLoader
 from models import *
 from utils.utils import *
