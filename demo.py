@@ -1,7 +1,6 @@
 from __future__ import division
 import torch
 import cv2
-from PIL import Image
 from torchvision import transforms as tf
 from models import *
 from utils.utils import *
