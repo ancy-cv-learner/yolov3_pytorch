@@ -1,15 +1,21 @@
+import os
 import glob
 import random
-import os
-import sys
+import torch
 import numpy as np
 from PIL import Image
-import torch
 import torch.nn.functional as F
-
 from utils.augmentations import horisontal_flip
 from torch.utils.data import Dataset
 import torchvision.transforms as transforms
+
+__all__ = [
+    'pad_to_square',
+    'resize',
+    'random_resize',
+    'ImageFolder',
+    'ListDataset'
+]
 
 
 def pad_to_square(img, pad_value):
@@ -21,7 +27,6 @@ def pad_to_square(img, pad_value):
     pad = (0, 0, pad1, pad2) if h <= w else (pad1, pad2, 0, 0)
     # Add padding
     img = F.pad(img, pad, "constant", value=pad_value)
-
     return img, pad
 
 
@@ -49,7 +54,6 @@ class ImageFolder(Dataset):
         img, _ = pad_to_square(img, 0)
         # Resize
         img = resize(img, self.img_size)
-
         return img_path, img
 
     def __len__(self):
@@ -79,7 +83,6 @@ class ListDataset(Dataset):
         # ---------
         #  Image
         # ---------
-
         img_path = self.img_files[index % len(self.img_files)].rstrip()
 
         # Extract image as PyTorch tensor
@@ -95,11 +98,9 @@ class ListDataset(Dataset):
         # Pad to square resolution
         img, pad = pad_to_square(img, 0)
         _, padded_h, padded_w = img.shape
-
         # ---------
         #  Label
         # ---------
-
         label_path = self.label_files[index % len(self.img_files)].rstrip()
 
         targets = None

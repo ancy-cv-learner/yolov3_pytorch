@@ -1,23 +1,16 @@
 from __future__ import division
-
+import tqdm
+import torch
+import argparse
+from torch.utils.data import DataLoader
 from models import *
 from utils.utils import *
 from utils.datasets import *
 from utils.parse_config import *
 
-import os
-import sys
-import time
-import datetime
-import argparse
-import tqdm
-
-import torch
-from torch.utils.data import DataLoader
-from torchvision import datasets
-from torchvision import transforms
-from torch.autograd import Variable
-import torch.optim as optim
+__all__ = [
+    'evaluate'
+]
 
 
 def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size):
@@ -34,14 +27,13 @@ def evaluate(model, path, iou_thres, conf_thres, nms_thres, img_size, batch_size
     labels = []
     sample_metrics = []  # List of tuples (TP, confs, pred)
     for batch_i, (_, imgs, targets) in enumerate(tqdm.tqdm(dataloader, desc="Detecting objects")):
-
         # Extract labels
         labels += targets[:, 1].tolist()
         # Rescale target
         targets[:, 2:] = xywh2xyxy(targets[:, 2:])
         targets[:, 2:] *= img_size
 
-        imgs = Variable(imgs.type(Tensor), requires_grad=False)
+        imgs = imgs.type(Tensor)
 
         with torch.no_grad():
             outputs = model(imgs)

@@ -1,7 +1,6 @@
 import json
 import os
 import cv2
-from toolbox import imgproctool as IPT
 
 
 def convert(size, box):
@@ -17,21 +16,6 @@ def convert(size, box):
     h = h * dh
     return x, y, w, h
 
-
-# def parseJson(json_path):
-#     with open(json_path, 'r') as f:
-#         data = json.load(f)
-#     rois_xywh_list = []
-#     for shape in data['shapes']:
-#         if len(shape['points']) == 2:
-#             roi_xywh = [int(shape['points'][0][0]), int(shape['points'][0][1]),
-#                         int(shape['points'][1][0]), int(shape['points'][1][1])]
-#
-#             rois_xywh_list.append(roi_xywh)
-#
-#     print(rois_xywh_list)
-#
-#     return rois_xywh_list
 
 def parseJson(json_path):
     with open(json_path, 'r') as f:

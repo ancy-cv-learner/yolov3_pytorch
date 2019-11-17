@@ -1,14 +1,22 @@
 from __future__ import division
-import math
-import time
 import tqdm
 import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torch.autograd import Variable
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as patches
+
+__all__ = [
+    'to_cpu',
+    'load_classes',
+    'weights_init_normal',
+    'rescale_boxes',
+    'xywh2xyxy',
+    'ap_per_class',
+    'compute_ap',
+    'get_batch_statistics',
+    'bbox_wh_iou',
+    'bbox_iou',
+    'non_max_suppression',
+    'build_targets'
+]
 
 
 def to_cpu(tensor):
@@ -18,9 +26,10 @@ def to_cpu(tensor):
 def load_classes(path):
     """
     Loads class labels at 'path'
+    不能有空行
     """
-    fp = open(path, "r")
-    names = fp.read().split("\n")[:-1]
+    with open(path, 'r') as fp:
+        names = fp.read().split("\n")
     return names
 
 
@@ -265,7 +274,6 @@ def non_max_suppression(prediction, conf_thres=0.5, nms_thres=0.4):
 
 
 def build_targets(pred_boxes, pred_cls, target, anchors, ignore_thres):
-
     ByteTensor = torch.cuda.ByteTensor if pred_boxes.is_cuda else torch.ByteTensor
     FloatTensor = torch.cuda.FloatTensor if pred_boxes.is_cuda else torch.FloatTensor
 

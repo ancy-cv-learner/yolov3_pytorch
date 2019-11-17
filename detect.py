@@ -1,31 +1,27 @@
 from __future__ import division
-
-from models import *
-from utils.utils import *
-from utils.datasets import *
-
 import os
-import sys
 import time
+import torch
 import datetime
 import argparse
-
+import random
 from PIL import Image
-
-import torch
+import numpy as np
 from torch.utils.data import DataLoader
-from torchvision import datasets
 from torch.autograd import Variable
-
 import matplotlib.pyplot as plt
 import matplotlib.patches as patches
 from matplotlib.ticker import NullLocator
+from models import *
+from utils.utils import *
+from utils.datasets import *
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--image_folder", type=str, default="data/samples", help="path to dataset")
     parser.add_argument("--model_def", type=str, default="config/yolov3.cfg", help="path to model definition file")
-    parser.add_argument("--weights_path", type=str, default="checkpoints/yolov3_ckpt_30.pth", help="path to weights file")
+    parser.add_argument("--weights_path", type=str, default="checkpoints/yolov3_ckpt_30.pth",
+                        help="path to weights file")
     parser.add_argument("--class_path", type=str, default="data/custom/classes.names", help="path to class label file")
     parser.add_argument("--conf_thres", type=float, default=0.8, help="object confidence threshold")
     parser.add_argument("--nms_thres", type=float, default=0.4, help="iou thresshold for non-maximum suppression")
@@ -111,7 +107,6 @@ if __name__ == "__main__":
             n_cls_preds = len(unique_labels)
             bbox_colors = random.sample(colors, n_cls_preds)
             for x1, y1, x2, y2, conf, cls_conf, cls_pred in detections:
-
                 print("\t+ Label: %s, Conf: %.5f" % (classes[int(cls_pred)], cls_conf.item()))
 
                 box_w = x2 - x1
